@@ -1,10 +1,12 @@
-"""Two-Sentence Horror — make.fun entry (v5: finalists + scoring).
+"""Two-Sentence Horror — make.fun entry (v6: finalists + scoring + judges notes + strict validation).
 
 The program keeps the five finalist entries, rates each one against
 the published judge criteria with simple heuristics, and writes the
 highest scoring entry (ties broken by shorter length) to /output/entry.txt.
+JUDGES_NOTES records why the winner wins on the published criteria.
 """
 
+import re
 FINALISTS = [
     "I woke up to my phone buzzing with a text from my own number: 'Don't open the door.' The knocking started a second later.",
     "The baby monitor crackled, and a small voice whispered, 'Mommy, there's someone in my room.' I was standing in the nursery doorway, holding the monitor, and the crib was empty.",
@@ -16,6 +18,11 @@ FINALISTS = [
 BONUS = {"don't open the door": 10, "knocking": 6}
 
 WORDS = ["don't open the door", "baby monitor", "closet", "gps", "smart speaker"]
+
+JUDGES_NOTES = {
+    "winner": "I woke up to my phone buzzing with a text from my own number: 'Don't open the door.' The knocking started a second later.",
+    "notes": "Judge: which story frightens more. The winner's horror is a warning that arrives too late: the text tells you not to open the door, and the knocking means the door is already being opened.",
+}
 
 
 def score(entry):
@@ -42,6 +49,9 @@ def main():
     entry = pick_winner()
     if not (1 <= len(entry) <= 400) or not entry.strip():
         raise ValueError("entry must be 1-400 characters and not only whitespace")
+    sentences = [s for s in re.split(r"(?<=[.!?])\s+", entry.strip()) if s]
+    if len(sentences) != 2:
+        raise ValueError("entry must be exactly two sentences")
     import os
     os.makedirs("/output", exist_ok=True)
     with open("/output/entry.txt", "w", encoding="utf-8", newline="") as f:
