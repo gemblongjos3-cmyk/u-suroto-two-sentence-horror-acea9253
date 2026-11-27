@@ -49,7 +49,7 @@ def main():
     entry = pick_winner()
     if not (1 <= len(entry) <= 400) or not entry.strip():
         raise ValueError("entry must be 1-400 characters and not only whitespace")
-    sentences = [s for s in re.split(r"(?<=[.!?])\s+", entry.strip()) if s]
+    sentences = [s for s in re.split(r"(?<=[.!?]['\"”)]?)\s+", entry.strip()) if s]
     if len(sentences) != 2:
         raise ValueError("entry must be exactly two sentences")
     import os
