@@ -1,4 +1,4 @@
-"""Two-Sentence Horror — make.fun entry (v6: finalists + scoring + judges notes + strict validation).
+"""Two-Sentence Horror — make.fun entry (v7: finalists + scoring + judges notes + strict validation).
 
 The program keeps the five finalist entries, rates each one against
 the published judge criteria with simple heuristics, and writes the
@@ -7,6 +7,9 @@ JUDGES_NOTES records why the winner wins on the published criteria.
 """
 
 import re
+
+MAX_CHARS = 400
+
 FINALISTS = [
     "I woke up to my phone buzzing with a text from my own number: 'Don't open the door.' The knocking started a second later.",
     "The baby monitor crackled, and a small voice whispered, 'Mommy, there's someone in my room.' I was standing in the nursery doorway, holding the monitor, and the crib was empty.",
@@ -47,7 +50,7 @@ def pick_winner():
 
 def main():
     entry = pick_winner()
-    if not (1 <= len(entry) <= 400) or not entry.strip():
+    if not (1 <= len(entry) <= MAX_CHARS) or not entry.strip():
         raise ValueError("entry must be 1-400 characters and not only whitespace")
     if len(re.findall(r"[.!?]['\"”)]?(?=\s|$)", entry.strip())) != 2:
         raise ValueError("entry must be exactly two sentences")
